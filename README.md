@@ -125,7 +125,89 @@ GraphQL:
 
 ## GraphQL vs gRPC
 
-*(Coming soon...)*
+GraphQL and REST are not the only API technologies. There is also **gRPC**, an open-source Remote Procedure Call (RPC) framework that enables you to build APIs.
+
+In this document, we'll explore how gRPC differs from and compares with GraphQL.
+
+---
+
+### How Does gRPC Work?
+
+**"RPC" stands for Remote Procedure Call**, which describes how communication happens.
+
+In gRPC, the client communicates with the server by calling its methods as if they were local. This is made possible by creating a **client stub**, which has the same methods as the gRPC server. The client then uses this stub to call the server's methods.
+
+They exchange data using **Protocol Buffers (Protobuf)**, whereas GraphQL uses text-based JSON for data exchange. **Protobuf** is a mechanism that serializes structured data into a binary format, making it more efficient. Learn more about Protobuf [here](https://protobuf.dev/overview/).
+
+Similar to GraphQL, gRPC has a schema-like file (`.proto`) that describes the API service. It specifies the available methods, their parameters, and their return types.
+
+The default and most common **Interface Definition Language** for writing `.proto` files is **Protobuf**.
+
+#### Example:
+
+```proto
+syntax = "proto3";
+
+service User {
+  rpc GetUser (UserRequest) returns (UserResponse) {}
+}
+
+message UserRequest {
+  int32 id = 1;
+}
+
+message UserResponse {
+  string name = 1;
+  int32 age = 2;
+  string address = 3;
+}
+```
+
+The above code defines a service that allows you to retrieve details about a specific user.
+- The `GetUser` method represents the API endpoint the client can call to retrieve a user.
+- Due to the `.proto` files and Protocol Buffers, gRPC can **auto-generate** the client and server boilerplate code in various programming languages.
+
+---
+
+### Benefits of gRPC
+
+- **Performance of data exchange:** gRPC uses Protobuf to serialize data into a binary format, improving payload size and making data exchange faster and more efficient.
+- **Uses HTTP/2 transport protocol:** HTTP/2 enables request/response multiplexing, splitting requests and responses into multiple frames sent individually and reassembled at the destination. This allows multiple requests and responses to be transferred over a single connection.
+
+- **Supports multiple streaming types:**
+  1. **Server streaming** – The client makes a request, and the server responds with a stream of messages.
+  2. **Client streaming** – The client sends a stream of messages, and the server responds after the client has finished streaming.
+  3. **Bidirectional streaming** – Both the client and server send independent streams of messages to each other.
+  4. **Unary interaction** – The client sends one request, and the server sends one response back.
+- **Code generation:** gRPC's `protoc` compiler can use the `.proto` file to generate server and client code in **11 programming languages**.
+
+---
+
+### Drawbacks of gRPC
+
+1. **Limited language support:** Protobuf-based code generation is limited to **C#/.NET, C++, Dart, Go, Java, Kotlin, Node.js, Objective-C, PHP, Python, and Ruby**.
+2. **Not human-readable:** Protobuf messages are in binary format, making them difficult to read and inspect without extra steps or tools.
+3. **Browser support limitations:** gRPC does not have full browser support because not all browsers support HTTP/2.
+
+---
+
+### GraphQL vs gRPC
+
+| Feature           | GraphQL | gRPC |
+|------------------|---------|------|
+| **Data Fetching** | Precise, fetch exactly what you need | May return extra data depending on API design |
+| **Performance**   | Uses JSON (text-based) | Uses Protobuf (binary), making it faster and more efficient |
+| **Code Generation** | Requires third-party tools | Native support for code generation |
+| **Browser Support** | Fully supported (uses HTTP/1.1) | Limited support (depends on HTTP/2 in browsers) |
+| **Message Format** | Human-readable JSON/XML | Binary Protobuf, not human-readable |
+| **Ease of Learning** | Easier to learn, more documentation | More complex due to Protobuf and HTTP/2 |
+
+---
+
+### Conclusion
+
+Both GraphQL and gRPC are great for specific use cases. No technology is a **one-size-fits-all** solution. In some scenarios, combining both technologies can create an even better solution.
+
 
 ## Core Concepts
 
